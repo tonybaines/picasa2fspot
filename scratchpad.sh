@@ -12,7 +12,7 @@ set_subjects "winter" $IMAGE
 
 subjects=`get_subjects $IMAGE`
 
-echo "Subjects: $subjects"
+echo "Subjects:$subjects"
 
 set_subjects "$subjects, Favourites" $IMAGE
 get_subjects $IMAGE
