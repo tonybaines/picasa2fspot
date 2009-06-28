@@ -14,7 +14,7 @@ text.eachMatch(STARRED_IMAGES) {
 
 def getExifSubjects(filename) {
 	def command = "exiftool -Subject ${filename}"
-	command.execute().text.split(/:/)[1].trim().split(/\w*,\w*/)
+	command.execute().text.split(/:/)[1].trim().split(/\s*,\s*/)
 }
 
 def addExifSubject(subject, filename) {
