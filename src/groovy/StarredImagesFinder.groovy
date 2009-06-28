@@ -20,5 +20,5 @@ def addExifSubject(subject, filename) {
 	List subjects = getExifSubjects(filename)
 	subjects += subject
 	def uniqueNonEmptySubjects = subjects.unique().findAll {!it.trim().empty}
-	"exiftool -Subject=${uniqueNonEmptySubjects.join(',')} ${filename}".execute()	
+	"exiftool -overwrite_original -Subject=${uniqueNonEmptySubjects.join(',')} ${filename}".execute()	
 }
