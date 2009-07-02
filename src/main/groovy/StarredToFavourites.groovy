@@ -13,17 +13,14 @@ def markAsFavourites(dir) {	println "Processing images ${dir}"
 }
 
 def getExifSubjects(filename) {
-	"exiftool -Subject ${filename}".execute().text
-		.split(/:/)[1].trim().split(/\s*,\s*/)
-}
+	def subjects = "exiftool -Subject ${filename}".execute().text
+	subjects.contains(':')? subjects.split(/:/)[1].trim().replaceAll(/[\'\"]/, '').split(/\s*,\s*/) : []}
 
 def addExifSubject(subject, filename) {
-	List subjects = getExifSubjects(filename)
-	subjects += subject
-	def uniqueNonEmptySubjects = subjects.unique().findAll {!it.trim().empty}
-	"exiftool -overwrite_original -P -Subject=${uniqueNonEmptySubjects.join(',')} ${filename}".execute()	
-}
-def processDir(base) {    base.eachDirRecurse {		println "Checking for Picasa metadata in ${it.absolutePath}"    	if (new File(it.absolutePath + '/Picasa.ini').exists()) {    		markAsFavourites it    	}    }}
+	List subjects = getExifSubjects(filename)	if (subjects.contains(subject)) {		println "${filename} is already tagged as ${subject}"	}	else {		"exiftool -overwrite_original -P -Subject+=${subject} ${filename}".execute()		}
+	
+//	subjects += subject
+//	def uniqueNonEmptySubjects = subjects.unique().findAll {!it.trim().empty}//	"exiftool -overwrite_original -P -Subject=${uniqueNonEmptySubjects.join(',')} ${filename}".execute()	}def processDir(base) {    base.eachDirRecurse {		println "Checking for Picasa metadata in ${it.absolutePath}"    	if (new File(it.absolutePath + '/Picasa.ini').exists()) {    		markAsFavourites it    	}    }}
 
 def cli = new CliBuilder(usage: 'Specify the directory to process')
 cli.h(longOpt: 'help', 'Usage')
